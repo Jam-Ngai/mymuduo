@@ -17,10 +17,10 @@ void Channel::tie(const std::shared_ptr<void>& obj) {
   tied_ = true;
 }
 // 更新fd感兴趣的事件
-void Channel::update() {}
+void Channel::Update() { loop_->UpdateChannel(this); }
 
 // 把当前的channel从eventloop中删除
-void Channel::remove() {}
+void Channel::Remove() { loop_->RemoveChannel(this); }
 
 void Channel::HandleEvent(Timestamp receive_time) {
   if (tied_) {
@@ -32,7 +32,7 @@ void Channel::HandleEvent(Timestamp receive_time) {
     HanleEventWithGuard(receive_time);
   }
 }
-//channel调用具体的回调操作
+// channel调用具体的回调操作
 void Channel::HanleEventWithGuard(Timestamp receive_time) {
   if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN)) {
     if (closecallback_) {

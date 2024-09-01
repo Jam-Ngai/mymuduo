@@ -36,23 +36,23 @@ class Channel : noncopyable {
 
   void EnableReading() {
     events_ |= kReadEvent;
-    update();
+    Update();
   }
   void DisableReading() {
     events_ &= ~kReadEvent;
-    update();
+    Update();
   }
   void EnableWriting() {
     events_ |= kWriteEvent;
-    update();
+    Update();
   }
   void DisableWriting() {
     events_ &= ~kWriteEvent;
-    update();
+    Update();
   }
   void DisableAll() {
     events_ = kNoneEvent;
-    update();
+    Update();
   }
 
   bool IsNoneEvent() const { return events_ == kNoneEvent; }
@@ -63,10 +63,10 @@ class Channel : noncopyable {
   void set_index(int idx) { index_ = idx; };
 
   EventLoop* OwnerLoop() { return loop_; };
-  void remove();
+  void Remove();
 
  private:
-  void update();
+  void Update();
   void HanleEventWithGuard(Timestamp receive_time);
 
   static const int kNoneEvent;

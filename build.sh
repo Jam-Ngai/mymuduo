@@ -26,6 +26,6 @@ fi
 
 cp 'pwd'/lib/libmymuduo /usr/lib/mymuduo
 
-export $LD_LIBRARY_PATH=/usr/lib/mymuduo:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib/mymuduo:$LD_LIBRARY_PATH
 
 ldconfig

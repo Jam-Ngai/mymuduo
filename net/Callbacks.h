@@ -20,8 +20,4 @@ using MessageCallback =
     std::function<void(const TcpConnectionPtr&, Buffer*, Timestamp)>;
 using WriteCompeleteCallback = std::function<void(const TcpConnectionPtr&)>;
 
-void DefaultConnectionCallback(const TcpConnectionPtr& conn);
-void DefaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer,
-                            Timestamp receivetime);
-
 }  // namespace mymuduo

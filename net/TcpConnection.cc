@@ -61,7 +61,7 @@ void TcpConnection::HandleRead(Timestamp receivetime) {
     HandleClose();
   } else {
     errno = savederrno;
-    LOG_WARNING("%s:%s:%d warning:TcpConnection::handleRead. \n", __FILE__,
+    LOG_WARNING("%s:%s:%d TcpConnection::handleRead. \n", __FILE__,
                 __FUNCTION__, __LINE__);
     HandleError();
   }
@@ -85,18 +85,17 @@ void TcpConnection::HandleWrite() {
         }
       }
     } else {
-      LOG_WARNING("%s:%s:%d WARNING TcpConnection::handleWrite. \n", __FILE__,
+      LOG_WARNING("%s:%s:%d TcpConnection::handleWrite. \n", __FILE__,
                   __FUNCTION__, __LINE__);
     }
   } else {
-    LOG_WARNING(
-        "%s:%s:%d WARNING TcpConnection fd=%d is down, no more writing. \n",
-        __FILE__, __FUNCTION__, __LINE__, socket_->sockfd());
+    LOG_WARNING("%s:%s:%d TcpConnection fd=%d is down, no more writing. \n",
+                __FILE__, __FUNCTION__, __LINE__, socket_->sockfd());
   }
 }
 
 void TcpConnection::HandleClose() {
-  LOG_INFO("INFO TcpConnection fd=%d state=%d. \n", socket_->sockfd(),
+  LOG_INFO("TcpConnection fd=%d state=%d. \n", socket_->sockfd(),
            state_.load());
   SetState(kDisconnected);
   channel_->DisableAll();
@@ -115,9 +114,8 @@ void TcpConnection::HandleError() {
   } else {
     err = optval;
   }
-  LOG_WARNING(
-      "%s:%s:%d WARNING TcpConnection::HandleError name=%s,SO_ERROR:%d \n.",
-      __FILE__, __FUNCTION__, __LINE__, name_.c_str(), err);
+  LOG_WARNING("%s:%s:%d TcpConnection::HandleError name=%s,SO_ERROR:%d \n.",
+              __FILE__, __FUNCTION__, __LINE__, name_.c_str(), err);
 }
 
 void TcpConnection::Send(const std::string& buf) {
@@ -140,7 +138,7 @@ void TcpConnection::SendInLoop(const void* data, size_t len) {
   bool faulterror = false;
   // connection已经被shutdown
   if (state_ == kDisconnected) {
-    LOG_WARNING("%s:%s:%d WARNING Disconnected, give up writing \n.", __FILE__,
+    LOG_WARNING("%s:%s:%d Disconnected, give up writing \n.", __FILE__,
                 __FUNCTION__, __LINE__);
     return;
   }
@@ -156,8 +154,8 @@ void TcpConnection::SendInLoop(const void* data, size_t len) {
     } else {  // nwrote <0
       nwrote = 0;
       if (errno != EWOULDBLOCK) {
-        LOG_WARNING("%s:%s:%d WARNING TcpConnection::SendInLoop ,err:%d\n.",
-                    __FILE__, __FUNCTION__, __LINE__, errno);
+        LOG_WARNING("%s:%s:%d TcpConnection::SendInLoop ,err:%d\n.", __FILE__,
+                    __FUNCTION__, __LINE__, errno);
         if (errno == EPIPE || errno == ECONNRESET) {
           faulterror = true;
         }

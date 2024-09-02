@@ -26,9 +26,8 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenaddr,
       name_(name),
       acceptor_(new Acceptor(loop, listenaddr, option == kReusePort)),
       threadpool_(new EventLoopThreadPool(loop, name)),
-      connectioncallback_(DefaultConnectionCallback),
-      messagecallback_(DefaultMessageCallback),
-      nextconnid_(1) {
+      nextconnid_(1),
+      started_(0) {
   // 有新用户连接时执行，在Acceptor::HandleRead中执行
   acceptor_->SetNewConnectionCallback(std::bind(&TcpServer::NewConnection, this,
                                                 std::placeholders::_1,
@@ -37,9 +36,9 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenaddr,
 
 TcpServer::~TcpServer() {
   for (auto& item : connections_) {
-    //防止TcpConnection被销毁
+    // 防止TcpConnection被销毁
     TcpConnectionPtr conn(item.second);
-    //释放对TcpConnection的所有权
+    // 释放对TcpConnection的所有权
     item.second.reset();
     conn->GetLoop()->RunInLoop(
         std::bind(&TcpConnection::ConnectDestroyed, conn));
@@ -66,9 +65,8 @@ void TcpServer::NewConnection(int sockfd, const InetAddress& peerAddr) {
   std::snprintf(buf, sizeof buf, "-%s#%d", ipport_.c_str(), nextconnid_);
   ++nextconnid_;
   std::string connname = name_ + buf;
-  LOG_INFO(
-      "INFO TcpServer::NewConnection [%s] - new connection [%s] from %s. \n",
-      name_.c_str(), connname.c_str(), peerAddr.ToIpPort().c_str());
+  LOG_INFO("TcpServer::NewConnection [%s] - new connection [%s] from %s. \n",
+           name_.c_str(), connname.c_str(), peerAddr.ToIpPort().c_str());
   sockaddr_in local;
   std::memset(&local, 0, sizeof local);
   socklen_t addrlen = static_cast<socklen_t>(sizeof local);
@@ -96,7 +94,7 @@ void TcpServer::RemoveConnection(const TcpConnectionPtr& conn) {
 }
 
 void TcpServer::RemoveConnectionInLoop(const TcpConnectionPtr& conn) {
-  LOG_INFO("INFO TcpServer::RemoveConnectionInLoop [%s] - connection [%s]. \n",
+  LOG_INFO("TcpServer::RemoveConnectionInLoop [%s] - connection [%s]. \n",
            name_.c_str(), conn->name().c_str());
   size_t n = connections_.erase(conn->name());
   EventLoop* ioloop = conn->GetLoop();

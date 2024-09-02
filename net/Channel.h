@@ -30,8 +30,8 @@ class Channel : noncopyable {
   // 防止Channel被手动remove掉，还在执行回调操作
   void tie(const std::shared_ptr<void>&);
 
-  int get_fd() const { return fd_; };
-  int get_events() const { return events_; };
+  int fd() const { return fd_; };
+  int events() const { return events_; };
   void set_revent(int revents) { revents_ = revents; };
 
   void EnableReading() {
@@ -59,7 +59,7 @@ class Channel : noncopyable {
   bool IsReadingEvent() const { return events_ & kReadEvent; }
   bool IsWritingEvent() const { return events_ & kWriteEvent; }
 
-  int get_index() const { return index_; };
+  int index() const { return index_; };
   void set_index(int idx) { index_ = idx; };
 
   EventLoop* OwnerLoop() { return loop_; };

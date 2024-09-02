@@ -7,7 +7,7 @@ Poller::Poller(EventLoop* loop) : ownerloop_(loop) {};
 Poller::~Poller() = default;
 
 bool Poller::HasChannel(Channel* channel) const {
-  auto it = channels_.find(channel->get_fd());
+  auto it = channels_.find(channel->fd());
   return it != channels_.end() && it->second == channel;
 }
 

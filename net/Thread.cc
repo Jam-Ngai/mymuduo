@@ -2,14 +2,14 @@
 
 #include <semaphore.h>
 
-#include <cstdio>
+#include <cstring>
 
 #include "CurrentThread.h"
 
 namespace mymuduo {
-std::atomic<int> Thread::numcreated_ = 0;
+std::atomic<int> Thread::numcreated_(0);
 
-Thread::Thread(ThreadFunc func, const std::string& name)
+Thread::Thread(ThreadFunc func, const std::string &name)
     : started_(false),
       joined_(false),
       tid_(0),
@@ -17,7 +17,6 @@ Thread::Thread(ThreadFunc func, const std::string& name)
       name_(name) {
   SetDefaultName();
 }
-
 Thread::~Thread() {
   if (started_ && !joined_) {
     thread_->detach();
@@ -26,14 +25,15 @@ Thread::~Thread() {
 
 void Thread::Start() {
   started_ = true;
-  // 开启一个新线程，执行线程函数
+  // 创建新线程
   sem_t sem;
   sem_init(&sem, 0, 0);
-  thread_ = std::make_shared<std::thread>([&]() {
+  thread_ = std::make_unique<std::thread>([&]() {
     tid_ = CurrentThread::Tid();
     sem_post(&sem);
     func_();
   });
+  // 等待获取新线程的tid
   sem_wait(&sem);
 }
 
@@ -43,9 +43,9 @@ void Thread::Join() {
 }
 
 void Thread::SetDefaultName() {
-  int num = numcreated_++;
+  int num = ++numcreated_;
   if (name_.empty()) {
-    char buf[32];
+    char buf[32] = {0};
     std::snprintf(buf, sizeof buf, "Thread%d", num);
     name_ = buf;
   }

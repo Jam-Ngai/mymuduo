@@ -117,6 +117,7 @@ Timestamp EPollPoller::Poll(int timeout_ms, ChannelList* active_channels) {
     if (save_errno != EINTR) {
       errno = save_errno;
       LOG_ERROR("EPollPoller::Poller() error:%d \n", errno);
+      exit(-1);
     }
   }
   return now;

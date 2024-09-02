@@ -1,4 +1,7 @@
 #pragma once
+
+#include <unistd.h>
+
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -12,15 +15,16 @@ class Thread : noncopyable {
  public:
   using ThreadFunc = std::function<void()>;
 
-  explicit Thread(ThreadFunc func, const std::string& name = std::string());
+  explicit Thread(ThreadFunc, const std::string &name = std::string());
   ~Thread();
 
   void Start();
   void Join();
 
   bool started() const { return started_; }
+  bool joined() const { return joined_; }
   pid_t tid() const { return tid_; }
-  const std::string& name() const { return name_; }
+  std::string name() const { return name_; }
 
   static int numcreated() { return numcreated_; }
 
@@ -34,4 +38,5 @@ class Thread : noncopyable {
   std::string name_;
   static std::atomic<int> numcreated_;
 };
+
 }  // namespace mymuduo

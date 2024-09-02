@@ -50,9 +50,10 @@ EventLoop::EventLoop()
   // 每一个eventloop都将监听wakeupchannel的读事件
   wakeupchannel_->EnableReading();
 }
+
 EventLoop::~EventLoop() {
   wakeupchannel_->DisableAll();
-  wakeupchannel_->remove();
+  wakeupchannel_->Remove();
   ::close(wakeupfd_);
   t_loopinthisthread = nullptr;
 }

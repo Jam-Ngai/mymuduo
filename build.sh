@@ -3,7 +3,7 @@
 set -e
 
 if [ ! -d $(pwd)/build ]; then
-  mkdir 'pwd'/build
+  mkdir $(pwd)/build
 fi
 
 rm -rf $(pwd)/build/*

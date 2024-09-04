@@ -28,10 +28,10 @@ class Logger : noncopyable {
   void LogDebug(const std::string& format, Args&&... args);
 
  private:
+  void log(const std::string& msg);
+
   int loglevel_;
   std::mutex mtx_;
-
-  void log(const std::string& msg);
 };
 
 template <typename... Args>

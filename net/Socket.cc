@@ -30,7 +30,7 @@ void Socket::Listen() {
 
 int Socket::Accept(InetAddress* peeraddr) {
   sockaddr_in addr;
-  socklen_t len;
+  socklen_t len = sizeof addr;
   std::memset(&addr, 0, sizeof addr);
   int connfd =
       ::accept4(sockfd_, (sockaddr*)&addr, &len, SOCK_NONBLOCK | SOCK_CLOEXEC);

@@ -1,12 +1,12 @@
-#include <functional>
-#include <string>
-#include <utility>
-
 #include <mymuduo/Buffer.h>
 #include <mymuduo/EventLoop.h>
 #include <mymuduo/Logger.h>
 #include <mymuduo/TcpConnection.h>
 #include <mymuduo/TcpServer.h>
+
+#include <functional>
+#include <string>
+#include <utility>
 
 using namespace mymuduo;
 
@@ -29,9 +29,9 @@ class EchoServer {
   // 连接建立或断开的回调
   void OnConnection(const TcpConnectionPtr& conn) {
     if (conn->Connected()) {
-      LOG_INFO("INFO Connection UP: %s", conn->peeraddr().ToIpPort().c_str());
+      LOG_INFO("INFO Connection UP: %s \n", conn->peeraddr().ToIpPort().c_str());
     } else {
-      LOG_INFO("INFO Connection DOWN: %s", conn->peeraddr().ToIpPort().c_str());
+      LOG_INFO("INFO Connection DOWN: %s \n", conn->peeraddr().ToIpPort().c_str());
     }
   }
   // 可读事件的回调
@@ -46,7 +46,7 @@ class EchoServer {
 
 int main(int argc, char* argv[]) {
   EventLoop loop;
-  InetAddress addr(8000);
+  InetAddress addr(8080);
   EchoServer server(&loop, addr, "EchoServer-01");
   server.Start();
   loop.Loop();

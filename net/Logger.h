@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdio>
 #include <cstring>
+#include <mutex>
 #include <string>
 
 #include "noncopyable.h"
@@ -28,12 +29,14 @@ class Logger : noncopyable {
 
  private:
   int loglevel_;
+  std::mutex mtx_;
 
   void log(const std::string& msg);
 };
 
 template <typename... Args>
 void Logger::LogInfo(const std::string& format, Args&&... args) {
+  std::unique_lock<std::mutex> lock(mtx_);
   Logger& logger = Logger::Instance();
   logger.set_loglevel(ENUM_INFO);
   char buffer[1024];
@@ -45,6 +48,7 @@ void Logger::LogInfo(const std::string& format, Args&&... args) {
 
 template <typename... Args>
 void Logger::LogWarning(const std::string& format, Args&&... args) {
+  std::unique_lock<std::mutex> lock(mtx_);
   Logger& logger = Logger::Instance();
   logger.set_loglevel(ENUM_WARNING);
   char buffer[1024];
@@ -56,6 +60,7 @@ void Logger::LogWarning(const std::string& format, Args&&... args) {
 
 template <typename... Args>
 void Logger::LogError(const std::string& format, Args&&... args) {
+  std::unique_lock<std::mutex> lock(mtx_);
   Logger& logger = Logger::Instance();
   logger.set_loglevel(ENUM_ERROR);
   char buffer[1024];
@@ -68,6 +73,7 @@ void Logger::LogError(const std::string& format, Args&&... args) {
 
 template <typename... Args>
 void Logger::LogDebug(const std::string& format, Args&&... args) {
+  std::unique_lock<std::mutex> lock(mtx_);
   Logger& logger = Logger::Instance();
   logger.set_loglevel(ENUM_DEBUG);
   char buffer[1024];

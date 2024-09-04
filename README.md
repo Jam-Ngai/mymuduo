@@ -18,7 +18,7 @@ cd ..
 sudo sh install.sh
 ```
 
-- 测试echo server
+- 编译echo server和Client
 
 ```shell
 cd test
@@ -27,11 +27,14 @@ cd build
 cmake ..
 make
 cd ..
+```
+
+- 测试服务器
+
+```shell
 # 开启服务器
-./bin/test
-# 客户端测试连接
-telnet 127.0.0.1 8080
-# 发送测试消息
-hello world！
+./bin/echoserver
+# 创建10,000个客户端进行连接
+sh test.sh
 ```
 

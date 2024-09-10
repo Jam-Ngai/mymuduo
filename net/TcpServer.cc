@@ -96,7 +96,7 @@ void TcpServer::RemoveConnection(const TcpConnectionPtr& conn) {
 void TcpServer::RemoveConnectionInLoop(const TcpConnectionPtr& conn) {
   LOG_INFO("TcpServer::RemoveConnectionInLoop [%s] - connection [%s]. \n",
            name_.c_str(), conn->name().c_str());
-  size_t n = connections_.erase(conn->name());
+  connections_.erase(conn->name());
   EventLoop* ioloop = conn->GetLoop();
   ioloop->QueueInLoop(std::bind(&TcpConnection::ConnectDestroyed, conn));
 }

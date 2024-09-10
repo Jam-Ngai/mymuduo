@@ -74,8 +74,8 @@ class TcpServer : noncopyable {
   WriteCompeleteCallback writecompletecallback_;
   // loop线程初始化的回调
   ThreadInitCallback threadinitcallback_;
-  std::atomic<int> started_;
   int nextconnid_;
+  std::atomic<int> started_;
   // 保存所有的链接
   ConnectionMap connections_;
 };

@@ -30,7 +30,7 @@ EPollPoller::EPollPoller(EventLoop* loop)
 EPollPoller::~EPollPoller() { ::close(epollfd_); }
 
 void EPollPoller::UpdateChannel(Channel* channel) {
-#ifdef DEBUG
+#ifndef NDEBUG
   LOG_INFO("func=%s, fd=%s, events=%d,index=%d \n", __FUNCTION__,
            channel->fd(), channel->events(), channel->index());
 #endif
@@ -57,7 +57,7 @@ void EPollPoller::UpdateChannel(Channel* channel) {
 
 void EPollPoller::RemoveChannel(Channel* channel) {
   int fd = channel->fd();
-#ifdef DEBUG
+#ifndef NDEBUG
   LOG_INFO("func:%s, fd=%d \n", __FUNCTION__, fd);
 #endif
   int index = channel->index();
@@ -96,13 +96,13 @@ void EPollPoller::Update(int operation, Channel* channel) {
 }
 
 Timestamp EPollPoller::Poll(int timeout_ms, ChannelList* active_channels) {
-  LOG_INFO("func:%s, total fd count: %lu\n", __FUNCTION__, channels_.size());
+  // LOG_INFO("func:%s, total fd count: %lu\n", __FUNCTION__, channels_.size());
   int numevents = ::epoll_wait(epollfd_, events_.data(),
                                static_cast<int>(events_.size()), timeout_ms);
   int save_errno = errno;
   Timestamp now(Timestamp::Now());
   if (numevents > 0) {
-#ifdef DEBUG
+#ifndef NDEBUG
     LOG_DEBUG("%d events happened.\n", numevents);
 #endif
     FillActiveChannels(numevents, active_channels);
@@ -110,7 +110,7 @@ Timestamp EPollPoller::Poll(int timeout_ms, ChannelList* active_channels) {
       events_.resize(events_.size() * 2);
     }
   } else if (numevents == 0) {
-#ifdef DEBUG
+#ifndef NDEBUG
     LOG_DEBUG("func=%s timeout.\n", __FUNCTION__);
 #endif
   } else {

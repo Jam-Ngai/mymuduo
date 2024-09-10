@@ -98,7 +98,7 @@ void Logger::LogDebug(const std::string& format, Args&&... args) {
     Logger& logger = Logger::Instance();    \
     logger.LogError(format, ##__VA_ARGS__); \
   }
-#ifdef DEBUG
+#ifndef NDEBUG
 #define LOG_DEBUG(format, ...)              \
   {                                         \
     Logger& logger = Logger::Instance();    \

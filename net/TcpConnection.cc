@@ -37,17 +37,17 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& name,
   channel_->set_writecallback(std::bind(&TcpConnection::HandleWrite, this));
   channel_->set_closecallback(std::bind(&TcpConnection::HandleClose, this));
   channel_->set_errorcallback(std::bind(&TcpConnection::HandleError, this));
-#ifdef DEBUG
+#ifndef NDEBUG
   LOG_DEBUG("TcpConnection %s at %p, fd=%d constructed. \n", name_.c_str(),
-            this, socket_);
+            this, socket_->sockfd());
 #endif
   socket_->SetKeepAlive(true);
 }
 
 TcpConnection::~TcpConnection() {
-#ifdef DEBUG
+#ifndef NDEBUG
   LOG_DEBUG("TcpConnection %s at %p, fd=%d disconstructed. \n", name_.c_str(),
-            this, socket_);
+            this, socket_->sockfd());
 #endif
 }
 

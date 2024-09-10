@@ -34,7 +34,7 @@ EventLoop::EventLoop()
       poller_(Poller::NewDefaultPoller(this)),
       wakeupfd_(CreateEventfd()),
       wakeupchannel_(new Channel(this, wakeupfd_)) {
-#ifdef DEBUG
+#ifndef NDEBUG
   LOG_DEBUG("EventLoop created %p in thread %d. \n", this, threadid_);
 #endif
   if (t_loopinthisthread) {
@@ -110,7 +110,7 @@ void EventLoop::QueueInLoop(Functor cb) {
   }
 }
 
-// 想wakeupfd写一个数据用来唤醒所在线程
+// 向wakeupfd写一个数据用来唤醒所在线程
 // wakeupchannel会发生读事件，其线程就会被唤醒
 void EventLoop::Wakeup() {
   uint64_t one = 1;
